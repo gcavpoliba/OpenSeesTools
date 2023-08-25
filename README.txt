@@ -5,7 +5,8 @@ PLEASE READE ME PLEASE READE ME PLEASE READE ME PLEASE READE ME PLEASE READE ME 
 #######################################################################################################
  
 OPENSEES AUTOCOMP 1.1 
-AUTHOR: GIANLUCA CAVALLO\nPOLITECNICO DI BARI
+AUTHOR: GIANLUCA CAVALLO
+POLITECNICO DI BARI
 YEAR: 2023
 EMAIL: gi.cav.2586@gmail.com
 Please, cite the author if use any part of this code
