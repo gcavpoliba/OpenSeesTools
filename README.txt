@@ -50,5 +50,5 @@ Functions implemented:
 - mGenFem20 - Creates the FEM 20-8 up hexaedron
 - mDash - Creates the dashpot
 - chPerm - Changes the permeability
-- App.subReacForce() - Substitute the constraints with the reaction forces on the plane (in developing - works only on x direction)
+- App.subReacForce() - Substitute the constraints with the reaction forces on the plane (pay attention)
 - mTieNodes - Constraints the points of 2 planes in x,y displacements as "TieNodes"
