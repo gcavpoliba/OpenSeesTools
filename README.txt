@@ -46,7 +46,7 @@ ATTENTION PLEASE: REMEMBER TO ADD THE 20-8 UPELEMENT TO gmsh2opensees PACKET OR 
 Functions implemented:
 
 - mDefine - Takes the node and put them in opensees
-- mFix - Fix many geometrical entities as the user whant
+- mFix - Fix many geometrical entities as the user want
 - mGenFem20 - Creates the FEM 20-8 up hexaedron
 - mDash - Creates the dashpot
 - chPerm - Changes the permeability
