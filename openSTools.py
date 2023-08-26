@@ -218,8 +218,8 @@ class App(Model):
             mem = ops.nodeReaction(int(i[0]), -1) 
 
             reacV1[int(i[0])] = mem
-            ops.load(int(i[0]), mem[0],0.0,0.0,0.0)  
-            ops.remove('sp',int(i[0]),1)
+            ops.load(int(i[0]), mem[0],mem[1],mem[2],0.0)
+            ops.remove('sp',int(i[0]))
         #########################
       
         print('\nEdge\n')
@@ -241,8 +241,8 @@ class App(Model):
             mem = ops.nodeReaction(int(i[0]), -1) 
 
             reacV2[int(i[0])] = mem
-            ops.load(int(i[0]), mem[0],0.0,0.0)  
-            ops.remove('sp',int(i[0]),1)
+            ops.load(int(i[0]), mem[0],mem[1],mem[2])  
+            ops.remove('sp',int(i[0]))
         
 
 def mDefine():
