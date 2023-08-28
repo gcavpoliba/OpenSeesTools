@@ -611,3 +611,129 @@ def mRecDyn(recDT):
     ops.recorder('Element', '-file', 'stress.out', '-time', '-dT', recDT, '-eleRange', 211, 335, 'material', '1','stress')
     ops.recorder('Element', '-file', 'strain.out', '-time', '-dT', recDT, '-eleRange', 211, 335, 'material', '1','strain')
     ops.recorder('Element', '-file', 'plastic.out', '-time', '-dT', recDT, '-eleRange', 211, 335, 'material', '1','plastic')
+
+def mExportPVD():
+    m = Model()
+    filename = 'exportPVDfile'
+    if not os.path.exists(filename):
+        os.makedirs(filename)
+    ops.recorder('PVD', filename, 'disp', 'gausspoint', 'stress')
+
+
+def mNodeInfoTxt():
+    global nodeList
+    # Selezione dei nodi di cui effettuare il record dei risultati - spostamenti - accelerazioni
+    m = Model()
+    print('Attenzione chiamare con Solid l elemento di volume')
+    b = m.setGeoElement('Solid')
+    bb = m.getElementsVectors()
+    eleNodes = bb[1]
+    eleTag = bb[0]
+    m.setUniqueVector(eleNodes)
+    l = len(eleNodes)
+    ll = len(eleNodes[0])
+    d = m.listOfTagsij(l, ll)
+    m.setUniqueVector(d)
+    e = m.makeUnique()
+    np.savetxt('nodeInfo.txt', e)
+
+def mNodeInfoCornerDat():
+    m = Model()
+    #FILE DAT SOLO SPIGOLI 3D
+    b = m.setGeoElement('Solid')
+    bb = m.getElementsVectors()
+    m.setUniqueVector(bb)
+    c = m.nodeCornEdge('20-nodi')
+    m.setUniqueVector(c[0])
+    print(len(c[0]))
+    print(len(c[0][0]))
+    l = len(c[0])
+    ll = len(c[0][0])
+    d = m.listOfTagsij(l,ll)
+    m.setUniqueVector(d)
+    e = m.makeUnique()
+    f = m.nodeNumCoordVector()
+    n = open("nodeInfoCorner.dat","w")
+    for i in f:
+        xCoord =  i[1][0]
+        yCoord =  i[1][1]
+        zCoord =  i[1][2]
+        n.write(f"{i[0]} {xCoord}    {yCoord}    {zCoord}\n")
+    n.close()
+    
+
+#FILE DAT TUTTI E 20 i NODI
+def mNodeInfoDat():
+    m = Model()
+    #FILE DAT SOLO SPIGOLI 3D
+    b = m.setGeoElement('Solid')
+    bb = m.getElementsVectors()
+    m.setUniqueVector(bb[1])
+    c = m.makeUnique()
+    m.setUniqueVector(c)
+    d=m.nodeNumCoordVector()
+    n=open("nodeInfo.dat","w")
+    for i in d:
+     xCoord =  i[1][0]
+     yCoord =  i[1][1]
+     zCoord =  i[1][2]
+     n.write(f"{i[0]} {xCoord}    {yCoord}    {zCoord}\n")
+    n.close()
+
+#################### SCRITTURA DELLA MESH #########################################
+def mGIDfile():
+    b = m.setGeoElement('Solid')
+    bb = m.getElementsVectors()
+    eleNodes = bb[1]
+    eleTag = bb[0]
+    LET = len(bb[0])
+    print(LET)
+    
+    mesh=open("mesh4GID.msh","w")
+    element=open("element4GID.dat","w")
+    mesh.write("MESH dimension 3 ElemType Hexahedra Nnode 20\n") #camuffato come elemento a 8 nodi.
+    mesh.write("Coordinates\n")
+    mesh.write("#node_number   coord_x   coord_y   coord_z\n")
+    m.setUniqueVector(bb[1])
+    c = m.makeUnique()
+    m.setUniqueVector(c)
+    d=m.nodeNumCoordVector()
+    for i in d:
+         xCoord =  i[1][0]
+         yCoord =  i[1][1]
+         zCoord =  i[1][2]
+         mesh.write(f"{i[0]} {xCoord}    {yCoord}    {zCoord}\n")
+         mesh.write("end coordinates\n")
+         mesh.write("Elements\n")
+        
+         mesh.write("# element   nodo1  nodo2   nodo3   nodo4   nodo5   nodo6   nodo7   nodo8   nodo9   nodo10   nodo11   nodo12   nodo13   nodo14   nodo15   nodo16   nodo17   nodo18   nodo19   nodo20\n")
+    
+    for i in range(0,LET):
+            elem = int(eleTag[i])
+            nodo1 = int(eleNodes[i][4])
+            nodo2 = int(eleNodes[i][5])
+            nodo3 = int(eleNodes[i][1])
+            nodo4 = int(eleNodes[i][0])
+            nodo5 = int(eleNodes[i][7])
+            nodo6 = int(eleNodes[i][6])
+            nodo7 = int(eleNodes[i][2])
+            nodo8 = int(eleNodes[i][3])
+            nodo9 = int(eleNodes[i][16])
+            nodo10 = int(eleNodes[i][12])
+            nodo11 = int(eleNodes[i][8])
+            nodo12 = int(eleNodes[i][10])
+            nodo13 = int(eleNodes[i][19])
+            nodo14 = int(eleNodes[i][14])
+            nodo15 = int(eleNodes[i][13])
+            nodo16 = int(eleNodes[i][15])
+            nodo17 = int(eleNodes[i][17])
+            nodo18 = int(eleNodes[i][18])
+            nodo19 = int(eleNodes[i][11])
+            nodo20 = int(eleNodes[i][9])
+            nodes_l = [nodo1,nodo2,nodo3,nodo4,nodo5,nodo6,nodo7,nodo8,nodo9, nodo10, nodo11,nodo12, nodo13, nodo14,nodo15,nodo16, nodo17,nodo18, nodo19, nodo20]
+            mesh.write(f"{elem} {nodo1} {nodo2} {nodo3} {nodo4} {nodo5} {nodo6} {nodo7} {nodo8} {nodo9} {nodo10} {nodo11} {nodo12} {nodo17} {nodo18} {nodo19} {nodo20} {nodo13} {nodo14} {nodo15} {nodo16} \n")
+            element.write(f"{elem} {nodo1} {nodo2} {nodo3} {nodo4} {nodo5} {nodo6} {nodo7} {nodo8} {nodo9} {nodo10} {nodo11} {nodo12} {nodo17} {nodo18} {nodo19} {nodo20} {nodo13} {nodo14} {nodo15} {nodo16}\n")
+    mesh.write("end elements")
+    
+    element.close()
+    mesh.close()
