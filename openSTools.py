@@ -682,6 +682,7 @@ def mNodeInfoDat():
 
 #################### SCRITTURA DELLA MESH #########################################
 def mGIDfile():
+    m = Model()
     b = m.setGeoElement('Solid')
     bb = m.getElementsVectors()
     eleNodes = bb[1]
