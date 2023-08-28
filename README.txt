@@ -52,3 +52,14 @@ Functions implemented:
 - chPerm - Changes the permeability
 - App.subReacForce() - Substitute the constraints with the reaction forces on the plane (pay attention)
 - mTieNodes - Constraints the points of 2 planes in x,y displacements as "TieNodes"
+
+Update: 28/08/2023
+Post processing export file required for Gid and flaviaWriter.m (flaviaWriter.m is developed for stabilized 8 nodes brick up element)
+ - mGIDfile() - Creates .msh and element.dat file for Gid PostProcessing
+ - mNodeInfoDat() - Creates .dat node info file
+ - mNodeInfoCornerDat() - Creates .dat corner node info file
+ - mNodeInfoTxt() - Creates .txt node info file
+ - mExportPVD() - Tells opensees to write pvd file for paraView
+
+and don't forget to have fun! ;)
+
