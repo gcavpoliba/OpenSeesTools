@@ -703,11 +703,11 @@ def mGIDfile():
          xCoord =  i[1][0]
          yCoord =  i[1][1]
          zCoord =  i[1][2]
-         mesh.write(f"{i[0]} {xCoord}    {yCoord}    {zCoord}\n")
-         mesh.write("end coordinates\n")
-         mesh.write("Elements\n")
+    mesh.write(f"{i[0]} {xCoord}    {yCoord}    {zCoord}\n")
+    mesh.write("end coordinates\n")
+    mesh.write("Elements\n")
         
-         mesh.write("# element   nodo1  nodo2   nodo3   nodo4   nodo5   nodo6   nodo7   nodo8   nodo9   nodo10   nodo11   nodo12   nodo13   nodo14   nodo15   nodo16   nodo17   nodo18   nodo19   nodo20\n")
+    mesh.write("# element   nodo1  nodo2   nodo3   nodo4   nodo5   nodo6   nodo7   nodo8   nodo9   nodo10   nodo11   nodo12   nodo13   nodo14   nodo15   nodo16   nodo17   nodo18   nodo19   nodo20\n")
     
     for i in range(0,LET):
             elem = int(eleTag[i])
