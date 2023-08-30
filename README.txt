@@ -73,6 +73,7 @@ You have to install by pip: openseespy opensees gmsh gmsh2opensees numpy scipy t
 Gmsh2Opensees is not available from  here: https://github.com/jaabell/gmsh2opensees/archive/refs/heads/main.zip,
 follow the github.com/jaabell/gmsh2opensees instruction to install in your python interpreter.
 Before to install remember to change the g2o_elements_functions.py.
+In gmsh you HAVE TO call Solid the geo-element of dimension 3 or you will get an "invalid 'Solid'" error.
 Whit this code you could perform easily the analysis with every mesh you build with gmsh and 20-8 node up 
 element you should take care in the geo_material choice
 Have fun
