@@ -53,13 +53,17 @@ Functions implemented:
 - App.subReacForce() - Substitute the constraints with the reaction forces on the plane (pay attention)
 - mTieNodes - Constraints the points of 2 planes in x,y displacements as "TieNodes"
 
-Update: 28/08/2023
+################# Update: 28/08/2023 ############################################################################
 Post processing export file required for Gid and flaviaWriter.m (flaviaWriter.m is developed for stabilized 8 nodes brick up element)
  - mGIDfile() - Creates .msh and element.dat file for Gid PostProcessing
  - mNodeInfoDat() - Creates .dat node info file
  - mNodeInfoCornerDat() - Creates .dat corner node info file
  - mNodeInfoTxt() - Creates .txt node info file
  - mExportPVD() - Tells opensees to write pvd file for paraView
+
+################# Update: 30/08/2023 ############################################################################
+ - mFix() function update: The function recognize if there are fixed nodes in that dimension and exclude them from the opensees fix command.
+                            So shoud be better to fix one dimension at time.
 
 and don't forget to have fun! ;)
 
