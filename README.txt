@@ -70,7 +70,7 @@ You have to execute the mfix function any times the number of the fixed surfaces
 The same if you want remove the fixies
 Please contact me for some code bugs to correct
 You have to install by pip: openseespy opensees gmsh gmsh2opensees numpy scipy time math os
-Gmsh2Opensees is not available from  here: https://github.com/jaabell/gmsh2opensees/archive/refs/heads/main.zip,
+Gmsh2Opensees is available from  here: https://github.com/jaabell/gmsh2opensees/archive/refs/heads/main.zip,
 follow the github.com/jaabell/gmsh2opensees instruction to install in your python interpreter.
 Before to install remember to change the g2o_elements_functions.py.
 In gmsh you HAVE TO call Solid the geo-element of dimension 3 or you will get an "invalid 'Solid'" error.
