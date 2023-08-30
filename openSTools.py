@@ -282,7 +282,7 @@ def mDefine():
 def mFix():
     print(g2o.get_physical_groups_map(gmsh.model))
     m = Model()  
-    fixed = ot.mgetFixedCoord()
+    fixed = m.mgetFixedCoord()
     type_el = str(input('inserisci l elemento geo da vincolare: '))
     print('inserire 1 per vincolo on 0 per vincolo off')
 
