@@ -281,13 +281,45 @@ def mDefine():
 
 def mFix():
     print(g2o.get_physical_groups_map(gmsh.model))
-    m = Model()
-    type_el = str(input('insert the geoElement to constarin'))
-    print('insert 1 constrain on 0 to constrain off')
-    x = int(input('x: 1 0n - 0 off'))
-    y = int(input('y: 1 0n - 0 off'))
-    z = int(input('z: 1 0n - 0 off'))
-    p = int(input('p: 1 0n - 0 off'))
+    m = Model()  
+    fixed = ot.mgetFixedCoord()
+    type_el = str(input('inserisci l elemento geo da vincolare: '))
+    print('inserire 1 per vincolo on 0 per vincolo off')
+
+    DofL = []
+    x = int(input('x: 1 0n - 0 off: '))
+    f_x = 0
+    if x == 1:
+        f_x = 1
+        DofL.append(f_x)
+    else:
+        f_x = 0
+        
+    y = int(input('y: 1 0n - 0 off: '))
+    f_y = 0
+    if y == 1:
+        f_y = 2
+        DofL.append(f_y)
+    else:
+        f_y = 0
+        
+    z = int(input('z: 1 0n - 0 off: '))
+    f_z = 0
+    if z == 1:
+        f_z = 3
+        DofL.append(f_z)
+    else:
+        f_z = 0
+        
+    p = int(input('p: 1 0n - 0 off: '))
+    f_p = 0
+    if p == 1:
+        f_p = 4
+        DofL.append(f_p)
+    else:
+        f_p = 0
+    #Vettore dof Locale ok
+
     b = m.setGeoElement(type_el)
     bb = m.getElementsVectors()
     m.setUniqueVector(bb)
@@ -301,10 +333,38 @@ def mFix():
     m.setUniqueVector(d)
     e = m.makeUnique()
     f = m.nodeNumCoordVector()
-    m.setUniqueVector(f)
+    ff = []
+
+    for i in f:
+        flag=0
+        mem=[]
+        if fixed ==[[],[],[]]:
+            ff.append(i)
+            continue
+        for j in fixed[1]:
+            if flag == 1:
+                break
+            if i[1] == j:
+                for k in fixed[2]:
+                  if flag == 1:
+                     break
+                  for kk in k:
+                      if flag == 1:
+                          break
+                      for l in DofL:
+                        if kk == l:
+                            flag=1
+                            break
+        if flag == 0:
+            ff.append(i)
+
+
+    m.setUniqueVector(ff)
     dim = 3
     ndf = 4
     m.sendOpsFixes(dim,ndf,x,y,z,p)
+    
+    print('\nEdge\n')
     m.setUniqueVector(c[1])
     print(len(c[1]))
     print(len(c[1][0]))
@@ -314,10 +374,38 @@ def mFix():
     m.setUniqueVector(d)
     e = m.makeUnique()
     f = m.nodeNumCoordVector()
+    ff = []
+
+    for i in f:
+        flag=0
+        mem=[]
+        if fixed ==[[],[],[]]:
+            ff.append(i)
+            continue
+        for j in fixed[1]:
+            if flag == 1:
+                break
+            if i[1] == j:
+                for k in fixed[2]:
+                  if flag == 1:
+                     break
+                  for kk in k:
+                      if flag == 1:
+                          break
+                      for l in DofL:
+                        if kk == l:
+                            flag=1
+                            break
+        if flag == 0:
+            ff.append(i)
+
+
+    m.setUniqueVector(ff)
     m.setUniqueVector(f)
     dim = 3
     ndf = 3
     m.sendOpsFixes(dim,ndf,x,y,z,p)
+
 
 
 def mRec():
