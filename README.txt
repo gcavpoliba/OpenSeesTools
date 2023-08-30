@@ -107,8 +107,8 @@ up element)
  - mExportPVD() - Tells opensees to write pvd file for paraView
 
 -⎽__⎽-⎻⎺⎺⎻-⎽__⎽--⎻⎺⎺⎻- Update: 30/08/2023 -⎽__⎽-⎻⎺⎺⎻-⎽__⎽--⎻⎺⎺⎻--⎽__⎽-⎻⎺⎺⎻-⎽__⎽--⎻⎺⎺⎻--⎽__⎽-⎻⎺⎺⎻-⎽__⎽--⎻⎺⎺⎻--⎽_
- - mFix() function update: The function recognize if there are fixed nodes in that dimension and exclude them from the 
-                           opensees fix command. So shoud be better to fix one dimension at time.
+ - mFix() function update: The function recognize if there are fixed nodes in that dimension and exclude 
+                   them from the opensees fix command. So shoud be better to fix one dimension at time.
 
 and don't forget to have fun! ;)
 
