@@ -401,7 +401,6 @@ def mFix():
 
 
     m.setUniqueVector(ff)
-    m.setUniqueVector(f)
     dim = 3
     ndf = 3
     m.sendOpsFixes(dim,ndf,x,y,z,p)
