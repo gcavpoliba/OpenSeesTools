@@ -98,8 +98,8 @@ Functions implemented:
 
 -⎽__⎽-⎻⎺⎺⎻-⎽__⎽--⎻⎺⎺⎻- Update: 28/08/2023 -⎽__⎽-⎻⎺⎺⎻-⎽__⎽--⎻⎺⎺⎻--⎽__⎽-⎻⎺⎺⎻-⎽__⎽--⎻⎺⎺⎻--⎽__⎽-⎻⎺⎺⎻-⎽__⎽--⎻⎺⎺⎻--⎽__
 
-Post processing export file required for Gid and flaviaWriter.m (flaviaWriter.m is developed for stabilized 8 nodes brick 
-up element)
+Post processing export file required for Gid and flaviaWriter.m (flaviaWriter.m is developed for 
+stabilized 8 nodes brick up element)
  - mGIDfile() - Creates .msh and element.dat file for Gid PostProcessing
  - mNodeInfoDat() - Creates .dat node info file
  - mNodeInfoCornerDat() - Creates .dat corner node info file
