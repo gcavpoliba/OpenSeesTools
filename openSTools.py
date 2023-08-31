@@ -7,6 +7,7 @@ print('OPENSEES AUTOCOMP 1.1\nAUTHOR: GIANLUCA CAVALLO\nPOLITECNICO DI BARI')
 print('YEAR: 2023')
 print('EMAIL: gi.cav.2586@gmail.com')
 print('Please, cite the author if use any part of this code')
+print('note: This code is part of the phd study course with the Supervisor: Prof. G Elia and Scientific Director: Prof.ssa Federica Cotecchia.')
 print('#######################################################################################################')
 print('#######################################################################################################')
 
