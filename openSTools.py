@@ -280,6 +280,20 @@ def mDefine():
         ndf = 3
         m.sendOpsNodes(dim,ndf)
 
+def mgetFixedCoord():
+        f = ops.getFixedNodes()
+        coordTag=[]
+        fixedCoord=[]
+        Dofs=[]
+        for i in f:
+            coordTag.append(i)
+            coordFixNode = ops.nodeCoord(i)
+            fixedCoord.append(coordFixNode)
+            g = ops.getFixedDOFs(i)
+            Dofs.append(g)
+        return [coordTag,fixedCoord,Dofs]
+
+
 def mFix():
     print(g2o.get_physical_groups_map(gmsh.model))
     m = Model()  
