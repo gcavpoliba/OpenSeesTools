@@ -108,8 +108,15 @@ stabilized 8 nodes brick up element)
  - mExportPVD() - Tells opensees to write pvd file for paraView
 
 -⎽__⎽-⎻⎺⎺⎻-⎽__⎽--⎻⎺⎺⎻- Update: 30/08/2023 -⎽__⎽-⎻⎺⎺⎻-⎽__⎽--⎻⎺⎺⎻--⎽__⎽-⎻⎺⎺⎻-⎽__⎽--⎻⎺⎺⎻--⎽__⎽-⎻⎺⎺⎻-⎽__⎽--⎻⎺⎺⎻--⎽_
+
  - mFix() function update: The function recognizes if there are fixed nodes in that dimension and excludes 
                    them from the opensees fix command. So it shoud be better to fix one dimension at time.
+
+-⎽__⎽-⎻⎺⎺⎻-⎽__⎽--⎻⎺⎺⎻- Update: 04/09/2023 -⎽__⎽-⎻⎺⎺⎻-⎽__⎽--⎻⎺⎺⎻--⎽__⎽-⎻⎺⎺⎻-⎽__⎽--⎻⎺⎺⎻--⎽__⎽-⎻⎺⎺⎻-⎽__⎽--⎻⎺⎺⎻--⎽_
+
+- Function mgetFixedCoord() rewritten ,it was disappeared
+
+
 
 and don't forget to have fun! ;)
 
