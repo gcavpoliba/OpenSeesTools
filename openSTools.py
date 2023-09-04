@@ -697,6 +697,7 @@ def mStage0(gamma1,beta1):
 
     ##################################################### ANALYZE ###################################################
     ops.analyze(1, 1)
+    return startT
 
 def mRecDyn(recDT):
     print('The code is under developement, please remeber to change the 3d recorder element range in mRec functions')
