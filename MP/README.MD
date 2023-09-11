@@ -1,4 +1,4 @@
-################### UPDATE 11/09/2023 - openSTools PARALLEL #########################################################
+################### UPDATE 11/09/2023 - openSTools PARALLEL ########################################
 
 In this folder you will file the same openSTools repository file but they will create an output usefull fir the parallel processing.
 At the end of the process in MasterMP.py you will get:
