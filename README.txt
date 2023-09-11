@@ -116,6 +116,10 @@ stabilized 8 nodes brick up element)
 
 - Function mgetFixedCoord() rewritten ,it was disappeared
 
+-⎽__⎽-⎻⎺⎺⎻-⎽__⎽--⎻⎺⎺⎻- Update: 11/09/2023 -⎽__⎽-⎻⎺⎺⎻-⎽__⎽--⎻⎺⎺⎻--⎽__⎽-⎻⎺⎺⎻-⎽__⎽--⎻⎺⎺⎻--⎽__⎽-⎻⎺⎺⎻-⎽__⎽--⎻⎺⎺⎻--⎽__
+
+- Implemented the writing of parallel output command python file to be executed in multiprocessor devices
+  find it in the MP folder (in testing)
 
 
 and don't forget to have fun! ;)
