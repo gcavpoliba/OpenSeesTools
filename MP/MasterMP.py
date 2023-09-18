@@ -9,7 +9,7 @@ import math as mm\n\
 import time as tt\n')
 py.close()
 #####################################
-
+######################################### NUMERO PROCESSORI 8 ncuts riga 258 ####################################
 import os
 import math as mm
 import time as tt
@@ -23,7 +23,7 @@ gmsh.initialize()
 meshfilename = str(input("insert the name of the mesh file: Cubo_new.msh: "))
 gmsh.open(meshfilename)
 
-import openSTools_text_MP_V2 as ot
+import openSToolsMP as ot
 
 ###### START ########
 ops.wipe()
@@ -80,6 +80,8 @@ py.close()
 
 
 ot.mDefine()
+
+ot.boundNodesPid0()
 
 
 #X
@@ -172,9 +174,9 @@ ops.updateMaterialStage('-material', 2, '-stage', 1)
 
 
 py = open("cubotto_exe.py", "a")
-py.write("ops.domainChange()\n")
 py.write("ops.updateMaterialStage('-material', 1, '-stage', 1)\n")
 py.write("ops.updateMaterialStage('-material', 2, '-stage', 1)\n")
+py.write("ops.domainChange()\n")
 py.close()
 
 
@@ -232,18 +234,29 @@ ops.remove('recorders')\n\
 velocityFile = 'yerbaNSvelocity'\n\
 data_gm = nup.loadtxt('yerbaNSvelocity.out')\n\
 ops.timeSeries('Path', 2, '-dt', {motionDT}, '-filePath', velocityFile +'.out', '-factor', {cFactor})\n\
-ops.pattern('Plain', 10, 2)\n\
-ops.load(458, 1.0,0.0, 0.0)\n")
+ops.pattern('Plain', 10, 2)\n")
 py.close()
+
+m = ot.Model()
+proc_dict = m.mDict()
+procId = ot.trova_nodo(proc_dict,int(nodo_mesh))
+for proc in procId:
+    
+    py = open("cubotto_exe.py", "a")
+    py.write(f'if pid == {proc}:\n')
+    py.write(f'    ops.load({nodo_mesh}, 1.0,0.0, 0.0)\n')
+    py.close()
+            
+
 
 
 
 ot.mRecDyn(recDT)
 
-
+############################### ATTENZIONE NCUTS ######################################################
 py = open("cubotto_exe.py", "a")
 py.write(f"ops.barrier()\n\
-ops.partition('-ncuts',36)\n\
+ops.partition('-ncuts',8)\n\
 ops.domainChange()\n")
 py.close()
 
@@ -271,41 +284,7 @@ ops.analysis('Transient')\n")
 py.close()
 
 
-perform analysis with timestep reduction loop
-ok = ops.analyze(nSteps, dT)
 
-
-#Per commentare e scommentare ctrl + 1 e ctrl + 4
-#if analysis fails, reduce timestep and continue with analysis
- if ok != 0:
-     print("did not converge, reducing time step")
-     curTime = ops.getTime()
-     mTime = curTime
-     print("curTime: ", curTime)
-     curStep = curTime / dT
-     print("curStep: ", curStep)
-     rStep = (nSteps - curStep) * 2.0
-     remStep = int((nSteps - curStep) * 2.0)
-     print("remStep: ", remStep)
-     dT = dT / 2.0
-     print("dT: ", dT)
-
-    ok = ops.analyze(remStep, dT)
-    # if analysis fails again, reduce timestep and continue with analysis
-     if ok != 0:
-         print("did not converge, reducing time step")
-         curTime = ops.getTime()
-         print("curTime: ", curTime)
-         curStep = (curTime - mTime) / dT
-         print("curStep: ", curStep)
-         remStep = int((rStep - curStep) * 2.0)
-         print("remStep: ", remStep)
-         dT = dT / 2.0
-         print("dT: ", dT)
-
-        ok = ops.analyze(remStep, dT)
-
-        
 py = open("cubotto_exe.py", "a")
 py.write(f"ok = ops.analyze(nSteps, dT)\n\
 if ok != 0:\n\
@@ -334,7 +313,45 @@ if ok != 0:\n\
         print('dT: ', dT)\n\
         ok = ops.analyze(remStep, dT)\n\
 endT = tt.time()\n")
-py.close()        
+py.close() 
+
+
+#perform analysis with timestep reduction loop
+ok = ops.analyze(nSteps, dT)
+
+
+#Per commentare e scommentare ctrl + 1 e ctrl + 4
+#if analysis fails, reduce timestep and continue with analysis
+if ok != 0:
+     print("did not converge, reducing time step")
+     curTime = ops.getTime()
+     mTime = curTime
+     print("curTime: ", curTime)
+     curStep = curTime / dT
+     print("curStep: ", curStep)
+     rStep = (nSteps - curStep) * 2.0
+     remStep = int((nSteps - curStep) * 2.0)
+     print("remStep: ", remStep)
+     dT = dT / 2.0
+     print("dT: ", dT)
+
+     ok = ops.analyze(remStep, dT)
+    # if analysis fails again, reduce timestep and continue with analysis
+     if ok != 0:
+         print("did not converge, reducing time step")
+         curTime = ops.getTime()
+         print("curTime: ", curTime)
+         curStep = (curTime - mTime) / dT
+         print("curStep: ", curStep)
+         remStep = int((rStep - curStep) * 2.0)
+         print("remStep: ", remStep)
+         dT = dT / 2.0
+         print("dT: ", dT)
+
+         ok = ops.analyze(remStep, dT)
+
+        
+       
         
        
 endT = tt.time()
