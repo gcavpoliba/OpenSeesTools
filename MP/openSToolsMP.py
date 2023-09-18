@@ -20,6 +20,7 @@ import time as tt
 
 
 def trova_nodo(dicto,value):
+    print('loading....')
     output = []
     for nproc, subdict in dicto.items():
         if subdict == {}:
@@ -34,6 +35,7 @@ def trova_nodo(dicto,value):
 
 
 def trova_elemento(dicto,value):
+    print('loading....')
     for nproc, subdict in dicto.items():
         for el_num,nod_list in subdict.items():
             if value == el_num:
@@ -51,6 +53,7 @@ class Model(object):
     def __init__(self,uniqueVector = [],nomeEl=str()):
         self.uniqueVector = uniqueVector
         self.nomeEl = nomeEl
+        self.PhysGr = PhysGr
         print('Model activated')
 
     def setGeoElement(self,nomeEl):
@@ -82,7 +85,7 @@ class Model(object):
     
     def mDict(self): 
         global proc_dict
-        
+        print('funzione mDict')
         tag_nodi = gmsh.model.mesh.getNodes()[0]
         numero_nodi = len(tag_nodi)
         print(f'numero dei nodi:  {numero_nodi}')
@@ -93,15 +96,15 @@ class Model(object):
         
         
         numero_el_np = 0
-        if numero_el%nop==0:
-            numero_el_np = int(numero_el/nop)
+        if numero_el%(nop-1)==0:
+            numero_el_np = int(numero_el/(nop-1))
         else:
-            numero_el_np = int(numero_el/nop) + 1
+            numero_el_np = int(numero_el/(nop-1)) + 1
         
         print(f'il numero di el per np è: {numero_el_np}')
         
         proc_dict = {}
-        for i in range(nop):
+        for i in range(1,nop):
             proc_dict[i] = 0
         
         m = Model()
@@ -110,7 +113,7 @@ class Model(object):
         eleNode={}
         eleNode = dict(zip(elementTag,nodeTag))
         
-        i = 0
+        i = 1
         j = 0 
         k = 0 
         jj = 0
@@ -211,6 +214,7 @@ class Model(object):
         return (nodeVecCorn,nodeVecEdge)
 
     def sendOpsNodes(self,dim,ndf):
+        print('funzione sendOpsNodes')
         self.dim = dim 
         self.ndf = ndf 
         m = Model()
@@ -237,9 +241,12 @@ class Model(object):
                 py = open("cubotto_exe.py","a")
                 py.write(f"    ops.node({int(self.uniqueVector[i][0])}, {coord[0]}, {coord[1]}, {coord[2]})\n")
                 py.close()
+                
+                
             ###################################
 
     def sendOpsFixes(self,dim,ndf,x,y,z,p):
+        print('funzione sendOpsFixes')
         self.dim = int(dim)
         self.ndf = int(ndf)
         self.x = int(x)
@@ -260,17 +267,27 @@ class Model(object):
             l = len(self.uniqueVector)
             for i in range(0, l):
                 ###################################
+                coord = [self.uniqueVector[i][1][0],self.uniqueVector[i][1][1],self.uniqueVector[i][1][2]]
                 procId = trova_nodo(proc_dict,self.uniqueVector[i][0])
+                j = 0
                 for proc in procId:
-                
+               
                     py = open("cubotto_exe.py","a")
                     py.write(f'if pid == {proc}:\n')
-                    py.close()
-                    
-                    py = open("cubotto_exe.py", "a")
-                    py.write(f'    ops.remove("sp", {int(self.uniqueVector[i][0])})\n\
+                    py.write(f'    ops.remove("sp", {int(self.uniqueVector[i][0])},1)\n\
+    ops.remove("sp", {int(self.uniqueVector[i][0])},2)\n\
+    ops.remove("sp", {int(self.uniqueVector[i][0])},3)\n\
     ops.fix({int(self.uniqueVector[i][0])}, {x}, {y}, {z},{p})\n')
                     py.close()
+                    if j == 0:
+                        py = open("cubotto_exe.py","a")
+                        py.write('if pid == 0:\n')
+                        py.write(f'    ops.remove("sp", {int(self.uniqueVector[i][0])},1)\n\
+    ops.remove("sp", {int(self.uniqueVector[i][0])},2)\n\
+    ops.remove("sp", {int(self.uniqueVector[i][0])},3)\n\
+    ops.fix({int(self.uniqueVector[i][0])}, {x}, {y}, {z},{p})\n')
+                        py.close()
+                        j = j + 1
                 ###################################
 
                 ops.remove('sp', int(self.uniqueVector[i][0]))
@@ -291,29 +308,46 @@ class Model(object):
                 ops.fix(int(self.uniqueVector[i][0]), x, y, z)
                 ###################################
                 procId = trova_nodo(proc_dict,self.uniqueVector[i][0])
+                coord = [self.uniqueVector[i][1][0],self.uniqueVector[i][1][1],self.uniqueVector[i][1][2]]
+                j = 0
                 for proc in procId:
                     
                     py = open("cubotto_exe.py","a")
                     py.write(f'if pid == {proc}:\n')
-                    py.close()
-                    
-                    py = open("cubotto_exe.py", "a")
-                    py.write(f'    ops.remove("sp", {int(self.uniqueVector[i][0])})\n\
+                    py.write(f'    ops.remove("sp", {int(self.uniqueVector[i][0])},1)\n\
+    ops.remove("sp", {int(self.uniqueVector[i][0])},2)\n\
+    ops.remove("sp", {int(self.uniqueVector[i][0])},3)\n\
     ops.fix({int(self.uniqueVector[i][0])}, {x}, {y}, {z})\n')
                     py.close()
+                    
+                    if j == 0:
+                        py = open("cubotto_exe.py","a")
+                        py.write('if pid == 0:\n')
+                        py.write(f'    ops.remove("sp", {int(self.uniqueVector[i][0])},1)\n\
+    ops.remove("sp", {int(self.uniqueVector[i][0])},2)\n\
+    ops.remove("sp", {int(self.uniqueVector[i][0])},3)\n\
+    ops.fix({int(self.uniqueVector[i][0])}, {x}, {y}, {z})\n')
+                        py.close()
+                        j = j+1
+                    
+                    
                 ###################################
         
 
 class App(Model):
     ops.reactions()
-    
     def __init__(self):
         Model.__init__(self)
+        #proc_dict = self.proc_dict
+        
 
     def subReacForce(self):
+        print('funzione subReacForce')
         print(g2o.get_physical_groups_map(gmsh.model))
         m = Model()
+        ########################### ATTENZIONE ############################
         proc_dict = m.mDict()
+        ###################################################################
         type_el = str(input('what geoElement do you want to unconstrain'))
         b = m.setGeoElement(type_el)
         bb = m.getElementsVectors()
@@ -344,7 +378,17 @@ class App(Model):
                 
                 py = open("cubotto_exe.py", "a")
                 py.write(f'if pid == {proc}:\n')
-                py.write(f"    ops.load({int(i[0])}, {mem[0]},{mem[1]},{mem[2]},0.0)\n    ops.remove('sp',{int(i[0])})\n")
+                py.write(f"    ops.load({int(i[0])}, {mem[0]},{mem[1]},{mem[2]},0.0)\n\
+    ops.remove('sp',{int(i[0])},1)\n\
+    ops.remove('sp',{int(i[0])},2)\n\
+    ops.remove('sp',{int(i[0])},3)\n")
+                
+               
+                py.write(f'if pid == 0:\n')
+                py.write(f"    ops.load({int(i[0])}, {mem[0]},{mem[1]},{mem[2]},0.0)\n")
+                py.write(f'    ops.remove("sp",{int(i[0])},1)\n\
+    ops.remove("sp",{int(i[0])},2)\n\
+    ops.remove("sp",{int(i[0])},3)\n')
                 py.close()
 
         #########################
@@ -375,11 +419,21 @@ class App(Model):
             for proc in procId:
                 py = open("cubotto_exe.py", "a")
                 py.write(f'if pid == {proc}:\n')
-                py.write(f"    ops.load({int(i[0])}, {mem[0]},{mem[1]},{mem[2]})\n    ops.remove('sp',{int(i[0])})\n")
+                py.write(f"    ops.load({int(i[0])}, {mem[0]},{mem[1]},{mem[2]})\n\
+    ops.remove('sp',{int(i[0])},1)\n\
+    ops.remove('sp',{int(i[0])},2)\n\
+    ops.remove('sp',{int(i[0])},3)\n")
+                
+                py.write('if pid == 0:\n')
+                py.write(f'    ops.remove("sp",{int(i[0])},1)\n\
+    ops.remove("sp",{int(i[0])},2)\n\
+    ops.remove("sp",{int(i[0])},3)\n')
+                py.write(f"    ops.load({int(i[0])}, {mem[0]},{mem[1]},{mem[2]})\n")
                 py.close()
             
 
 def mDefine():
+        print('funzione mDefine')
         m = Model()
         proc_dict = m.mDict()
         b = m.setGeoElement('Solid')
@@ -413,6 +467,101 @@ def mDefine():
         dim = 3
         ndf = 3
         m.sendOpsNodes(dim,ndf)
+        
+def boundNodesPid0():
+### scrive solo il file input per parallelo
+    print('funzione boundNodesPid0')
+    print('attenzione al nome dei geoGruppi, dal gruppo si sono elminati i solidi e le linee, attenzione ai nomi, rieditare boundNodesPid0')
+    m = Model()
+    boundNodesCornTag = []
+    boundNodesEdgeTag = []
+
+    for i in m.PhysGr:
+        type_el = str(i)
+        if type_el == 'Solid':
+            continue
+        elif type_el == 'Edges':
+            continue
+        else:
+            b = m.setGeoElement(type_el)
+            bb = m.getElementsVectors()
+            m.setUniqueVector(bb)
+            c = m.nodeCornEdge('8-nodi')
+            m.setUniqueVector(c[0])
+            print(len(c[0]))
+            print(len(c[0][0]))
+            l = len(c[0])
+            ll = len(c[0][0])
+            d = m.listOfTagsij(l,ll)
+            m.setUniqueVector(d)
+            e = m.makeUnique()
+            for i in e:
+                    boundNodesCornTag.append(i)
+            
+    for i in m.PhysGr:
+        type_el = str(i)
+        if type_el == 'Solid':
+            continue
+        elif type_el == 'Edges':
+            continue
+        else:
+
+            b = m.setGeoElement(type_el)
+            bb = m.getElementsVectors()
+            m.setUniqueVector(bb)
+            c = m.nodeCornEdge('8-nodi')
+            
+            m.setUniqueVector(c[1])
+            print(len(c[1]))
+            print(len(c[1][0]))
+            l=len(c[1])
+            ll=len(c[1][0])
+            d = m.listOfTagsij(l,ll)
+            m.setUniqueVector(d)
+            e = m.makeUnique()
+            for i in e:
+                boundNodesEdgeTag.append(i)
+                
+    boundNodeCorner = nup.unique(nup.array(boundNodesCornTag))
+    boundNodeEdge = nup.unique(nup.array(boundNodesEdgeTag))
+   
+    
+    dim = 3
+    ndf = 4
+    
+    py = open("cubotto_exe.py","a")
+    py.write('if pid == 0:\n')
+    py.write(f'    ops.model("basicBuilder","-ndm",{dim},"-ndf",{ndf})\n')
+    py.close()
+    
+    for j in boundNodeCorner:
+        x = gmsh.model.mesh.getNode(int(j))[0][0]
+        y = gmsh.model.mesh.getNode(int(j))[0][1]
+        z = gmsh.model.mesh.getNode(int(j))[0][2]
+        num = int(j)
+        py = open("cubotto_exe.py","a")
+        py.write(f'    ops.node({num},{x},{y},{z})\n')
+        py.close()
+
+    dim = 3
+    ndf = 3
+    
+    py = open("cubotto_exe.py","a")
+    py.write('if pid == 0:\n')
+    py.write(f'    ops.model("basicBuilder","-ndm",{dim},"-ndf",{ndf})\n')
+    py.close()
+     
+    for j in boundNodeEdge:
+        x = gmsh.model.mesh.getNode(int(j))[0][0]
+        y = gmsh.model.mesh.getNode(int(j))[0][1]
+        z = gmsh.model.mesh.getNode(int(j))[0][2]
+        num = int(j)
+        py = open("cubotto_exe.py","a")
+        py.write(f'    ops.node({num},{x},{y},{z})\n')
+        py.close()
+        
+    print(boundNodeCorner,boundNodeEdge)
+    return [boundNodeCorner,boundNodeEdge]      
 
 def mgetFixedCoord():
         f = ops.getFixedNodes()
@@ -428,6 +577,7 @@ def mgetFixedCoord():
         return [coordTag,fixedCoord,Dofs]
 
 def mFix():
+    print('funzione mFix')
     print(g2o.get_physical_groups_map(gmsh.model))
     m = Model()  
     fixed = mgetFixedCoord()
@@ -556,6 +706,7 @@ def mFix():
 
 
 def mRec():
+    print('funzione mRec')
     print('The code is under developement, please remeber to change the 3d recorder element range in mRec functions')
     global nodeList
 
@@ -628,6 +779,7 @@ def mRec():
     return nodeList
 
 def mGenFem20():
+    print('funzione mGenFem20')
     m = Model()
     proc_dict = m.mDict()
     b = m.setGeoElement('Solid')
@@ -660,14 +812,18 @@ def mGenFem20():
         nodes_l = [nodo1,nodo2,nodo3,nodo4,nodo5,nodo6,nodo7,nodo8,nodo9, nodo10, nodo11,nodo12, nodo13, nodo14,nodo15,nodo16, nodo17,nodo18, nodo19, nodo20]
         ops.element('20_8_BrickUP',elem,*nodes_l, 1, 2.2e6, 1, 1.0, 1.0, 1.0, 0.0, 0.0,-20)
         #################################################
-        procId = trova_elemento(proc_dict,elem)    
-        py = open("cubotto_exe.py", "a")
-        py.write(f'if pid == {procId}:\n')
-        py.write(f"    ops.element('20_8_BrickUP',{elem},{nodo1}, {nodo2}, {nodo3}, {nodo4}, {nodo5}, {nodo6}, {nodo7}, {nodo8}, {nodo9},{nodo10}, {nodo11}, {nodo12}, {nodo13}, {nodo14}, {nodo15}, {nodo16}, {nodo17}, {nodo18},{nodo19}, {nodo20}, 1, 2.2e6, 1, 1.0, 1.0, 1.0, 0.0, 0.0,-9.81)\n")
-        py.close()
+        procId = trova_elemento(proc_dict,elem)
+        if elem == []:
+            continue
+        else:
+            py = open("cubotto_exe.py", "a")
+            py.write(f'if pid == {procId}:\n')
+            py.write(f"    ops.element('20_8_BrickUP',{elem},{nodo1}, {nodo2}, {nodo3}, {nodo4}, {nodo5}, {nodo6}, {nodo7}, {nodo8}, {nodo9},{nodo10}, {nodo11}, {nodo12}, {nodo13}, {nodo14}, {nodo15}, {nodo16}, {nodo17}, {nodo18},{nodo19}, {nodo20}, 1, 2.2e6, 1, 1.0, 1.0, 1.0, 0.0, 0.0,-9.81)\n")
+            py.close()
 
 
 def mDash():
+        print('funzione mDash')
         m = Model()
         proc_dict = m.mDict()
         b = m.setGeoElement('Solid')
@@ -717,35 +873,6 @@ def mDash():
         
         ops.equalDOF(int(nodo_mesh), int(dashFree),1)
         
-        #################################################
-        procId = trova_nodo(proc_dict,int(nodo_mesh))
-        for proc in procId:
-            
-            py = open("cubotto_exe.py", "a")
-            py.write(f'if pid == {proc}:\n')
-        
-        
-        py = open("cubotto_exe.py", "a")
-        py.write(f'    ops.node({dashFree},{x},{y},{z})\n')
-        py.close()
-        
-        py = open("cubotto_exe.py", "a")
-        py.write(f'    ops.node({dashFix},{x},{y},{z})\n')
-        py.close()
-        
-        py = open("cubotto_exe.py", "a")
-        py.write(f'    ops.fix({dashFix},1,1,1)\n')
-        py.close()
-        
-        py = open("cubotto_exe.py", "a")
-        py.write(f'    ops.fix({dashFree},{f_x},{f_y},{f_z})\n')
-        py.close()
-        
-        py = open("cubotto_exe.py", "a")
-        py.write(f'    ops.equalDOF(int({nodo_mesh}), int({dashFree}),1)\n')
-        py.close()
-        #################################################
-        
         colArea =   float(input('conn. area of dashpot'))
         rockVS =    float(input('Bedrock VS'))
         rockDen  =  float(input('Bedrock density'))
@@ -753,11 +880,7 @@ def mDash():
         tag = int(input('insert uniaxialMaterial tag (> n. geo-material)'))
         alpha = 1 
         ops.uniaxialMaterial('Viscous',tag,dashpotCoeff, alpha)
-        #################################################
-        py = open("cubotto_exe.py", "a")
-        py.write(f"    ops.uniaxialMaterial('Viscous',{tag},{dashpotCoeff}, {alpha})\n")
-        py.close()
-        #################################################
+        
         m.setUniqueVector(eleTag)
         max_tag = nup.max(eleTag)
         var_dir = int(input('dof of dashpot -dir: 1 along x, 2 along xy, 3 along y'))
@@ -768,11 +891,47 @@ def mDash():
         elif var_dir == 3:
             dir = [2]
         ops.element('zeroLength', int(max_tag+1), int(dashFix), int(dashFree), '-mat', tag, '-dir', *dir)
+        
         #################################################
-        py = open("cubotto_exe.py", "a")
-        py.write(f'    dir = {dir}\n')
-        py.write(f"    ops.element('zeroLength', {int(max_tag+1)}, {int(dashFix)}, {int(dashFree)}, '-mat', {tag}, '-dir', *dir)\n")
-        py.close()
+        procId = trova_nodo(proc_dict,int(nodo_mesh))
+        for proc in procId:
+            
+            py = open("cubotto_exe.py", "a")
+            py.write(f'if pid == {proc}:\n')
+        
+            py = open("cubotto_exe.py", "a")
+            py.write(f'    ops.node({dashFree},{x},{y},{z})\n')
+            py.close()
+            
+            py = open("cubotto_exe.py", "a")
+            py.write(f'    ops.node({dashFix},{x},{y},{z})\n')
+            py.close()
+            
+            py = open("cubotto_exe.py", "a")
+            py.write(f'    ops.fix({dashFix},1,1,1)\n')
+            py.close()
+            
+            py = open("cubotto_exe.py", "a")
+            py.write(f'    ops.fix({dashFree},{f_x},{f_y},{f_z})\n')
+            py.close()
+            
+            py = open("cubotto_exe.py", "a")
+            py.write(f'    ops.equalDOF(int({nodo_mesh}), int({dashFree}),1)\n')
+            py.close()
+        #################################################
+        
+        
+        #################################################
+            py = open("cubotto_exe.py", "a")
+            py.write(f"    ops.uniaxialMaterial('Viscous',{tag},{dashpotCoeff}, {alpha})\n")
+            py.close()
+        #################################################
+        
+        #################################################
+            py = open("cubotto_exe.py", "a")
+            py.write(f'    dir = {dir}\n')
+            py.write(f"    ops.element('zeroLength', {int(max_tag+1)}, {int(dashFix)}, {int(dashFree)}, '-mat', {tag}, '-dir', *dir)\n")
+            py.close()
         #################################################
         return [colArea,dashpotCoeff,nodo_mesh]
     
@@ -791,6 +950,7 @@ def floatingNodes():
 
 
 def chPerm():
+    print('funzione chPerm')
     m = Model()
     proc_dict = m.mDict()
     permh = float(input('insert h permeability'))
@@ -841,6 +1001,7 @@ def chPerm():
         
         
 def mTieNodes():
+        print('funzione mTieNodes')
         m = Model()
         proc_dict = m.mDict()
         type_el_master1 = str(input('insert master plane geoElement'))
@@ -885,26 +1046,13 @@ def mTieNodes():
                     eqDofDic[i[0]] = j[0]
                     ops.equalDOF(int(i[0]), int(j[0]), *DOF)
                     #################################################
-                    procId_i = trova_nodo(proc_dict,int(i[0]))
-                    procId_j = trova_nodo(proc_dict,int(j[0]))
-                    for proc_i in procId_i:
-                           if proc_i in procId_j:
-                                py = open("cubotto_exe.py", "a")
-                                py.write(f'if pid == {proc_i}:\n')
-                                py.write(f'    DOF = {DOF}\n')
-                                py.write(f'    equalDOF({int(i[0])}, {int(j[0])}, *DOF)\n')
-                                py.close()
-                           else:
-                                py = open("cubotto_exe.py", "a")
-                                py.write(f'if pid == {proc_i}:\n') 
-                                py.write(f'    DOF = {DOF}\n\
-    x = gmsh.model.mesh.getNode({int(j[0])})[0][0]\n\
-    y = gmsh.model.mesh.getNode({int(j[0])})[0][1]\n\
-    z = gmsh.model.mesh.getNode({int(j[0])})[0][2]\n\
-    coord_l=[x,y,z]\n')
-                                py.write(f'    ops.node({int(j[0])},*coord_l)\n') 
-                                py.write(f'    equalDOF({int(i[0])}, {int(j[0])}, *DOF)\n')
-                                py.close()
+                   
+                    py = open("cubotto_exe.py", "a")
+                    py.write(f'if pid == 0:\n')
+                    py.write(f'    DOF = {DOF}\n')
+                    py.write(f'    ops.equalDOF({int(i[0])}, {int(j[0])}, *DOF)\n')
+                    py.close()
+                          
                                 
            
         b = m.setGeoElement(type_el_master1)
@@ -947,30 +1095,17 @@ def mTieNodes():
                     eqDofDic[i[0]] = j[0]
                     ops.equalDOF(int(i[0]), int(j[0]), *DOF)
                     #################################################
-                    procId_i = trova_nodo(proc_dict,int(i[0]))
-                    procId_j = trova_nodo(proc_dict,int(j[0]))
-                    for proc_i in procId_i:
-                           if proc_i in procId_j:
-                                py = open("cubotto_exe.py", "a")
-                                py.write(f'if pid == {proc_i}:\n')
-                                py.write(f'    DOF = {DOF}\n')
-                                py.write(f'    equalDOF({int(i[0])}, {int(j[0])}, *DOF)\n')
-                                py.close()
-                           else:
-                                py = open("cubotto_exe.py", "a")
-                                py.write(f'if pid == {proc_i}:\n') 
-                                py.write(f'    DOF = {DOF}\n\
-    x = gmsh.model.mesh.getNode({int(j[0])})[0][0]\n\
-    y = gmsh.model.mesh.getNode({int(j[0])})[0][1]\n\
-    z = gmsh.model.mesh.getNode({int(j[0])})[0][2]\n\
-    coord_l=[x,y,z]\n')
-                                py.write(f'    ops.node({int(j[0])},*coord_l)\n') 
-                                py.write(f'    equalDOF({int(i[0])}, {int(j[0])}, *DOF)\n')
-                                py.close()
+                    
+                    py = open("cubotto_exe.py", "a")
+                    py.write(f'if pid == 0:\n')
+                    py.write(f'    DOF = {DOF}\n')
+                    py.write(f'    ops.equalDOF({int(i[0])}, {int(j[0])}, *DOF)\n')
+                    py.close()
+                           
                     #################################################
 
 def mStage0(gamma1,beta1):
-    
+    print('funzione mStage0')
     
     
     ops.model("basicBuilder", "-ndm", 3, "-ndf", 4)
@@ -1002,8 +1137,8 @@ def mStage0(gamma1,beta1):
     py.write(f"ops.constraints('Penalty', 1.e18, 1.e18)\n\
 ops.test('NormDispIncr', 1.0e-6, 500, 1)\n\
 ops.algorithm('KrylovNewton')\n\
-ops.numberer('Plain')\n\
-ops.system('ProfileSPD')\n\
+ops.numberer('ParallelRCM')\n\
+ops.system('Mumps')\n\
 ops.integrator('Newmark', {gamma1}, {beta1})\n\
 ops.analysis('Transient')\n\
 startT = tt.time()\n\
@@ -1013,6 +1148,7 @@ ops.analyze(1,1)\n")
     ops.analyze(1, 1)
 
 def mRecDyn(recDT):
+    print('funzione mRecDyn')
     m = Model()
     proc_dict = m.mDict()
     print('The code is under developement, please remeber to change the 3d recorder element range in mRec functions')
