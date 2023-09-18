@@ -6,3 +6,8 @@ At the end of the process in MasterMP.py you will get:
 - A file of output named cubo_exe.py that you can use with a multiprocessor machine.
 
 Note that for these file are valid the note, the licence, and the disclaimer written in the general repository
+
+################### UPDATE 18/09/2023 - openSTools PARALLEL ########################################
+
+- New function implemented for the TieNodes on the boundary surfaces
+
