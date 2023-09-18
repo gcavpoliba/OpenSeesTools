@@ -121,6 +121,13 @@ stabilized 8 nodes brick up element)
 - Implemented the writing of parallel output command python file to be executed in multiprocessor devices
   find it in the MP folder (in testing)
 
+-⎽__⎽-⎻⎺⎺⎻-⎽__⎽--⎻⎺⎺⎻- Update: 18/09/2023 -⎽__⎽-⎻⎺⎺⎻-⎽__⎽--⎻⎺⎺⎻--⎽__⎽-⎻⎺⎺⎻-⎽__⎽--⎻⎺⎺⎻--⎽__⎽-⎻⎺⎺⎻-⎽__⎽--⎻⎺⎺⎻--⎽__
+
+- Implemented a new function to put the boundary nodes in the proc o also, for the MP version.
+- Considering the manual splitting, the automatic opensees function was erased in MasterMP.py file
+- Unformtuantely on VirtualBox Linux VM the software gets stuck and crush with mpiexec function with no code
+  or opensees error
+
 
 and don't forget to have fun! ;)
 
